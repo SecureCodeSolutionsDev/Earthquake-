@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://securecodesolutionsdev.github.io/earthquake-/sitemap.xml
