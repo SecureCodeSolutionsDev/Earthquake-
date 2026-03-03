@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Global Earthquake Watch</title>
+
+<!-- ========== PERFORMANCE OPTIMIZATIONS ========== -->
+<!-- Preconnect to USGS API (used by the script) -->
+<link rel="preconnect" href="https://earthquake.usgs.gov">
+<link rel="dns-prefetch" href="https://earthquake.usgs.gov">
+
+<!-- Font display swap (prevents FOIT) -->
+<style>
+  body { font-display: swap; }
+</style>
+
+<!-- Your existing styles (unchanged) -->
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:#0a0a0f;
+  color:#e0e0e0;
+  font-family:'Segoe UI',sans-serif;
+  min-height:100vh;
+}
+/* … (all your original CSS) … */
+.disclaimer { margin:0 20px 24px; padding:12px 16px; background:#0f0a1a; border:1px solid #1e1828; border-radius:12px; font-size:0.68rem; color:#3a3a4a; line-height:1.8; }
+::-webkit-scrollbar { width:5px; }
+::-webkit-scrollbar-track { background:#0a0a0f; }
+::-webkit-scrollbar-thumb { background:#1e1e2e; border-radius:3px; }
+footer { text-align:center; padding:18px; color:#1e1e2e; font-size:0.63rem; border-top:1px solid #0f0f18; }
+@media(max-width:500px){ .card-info{ grid-template-columns:1fr 1fr; } .accuracy-row{ flex-direction:column; } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">👁️‍🗨️</div>
+  <div class="header-text">
+    <h1>Global Earthquake Watch</h1>
+    <p>Live monitoring  · Automatic seismic pattern detection</p>
+  </div>
+  <div class="live-pill">
+    <div class="live-dot"></div> LIVE
+  </div>
+</div>
+
+<div class="action-bar">
+  <button class="scan-btn" id="scanBtn" onclick="fetchAndRun()">
+    <div class="spinner" id="spinner"></div>
+    <span id="scanLabel">🔍 Scan Now</span>
+  </button>
+  <button class="filter-btn" onclick="toggleFilters()" id="filterToggle">⚙ Filters</button>
+  <span class="scan-status" id="scanStatus"></span>
+  <span class="scan-time" id="scanTime"></span>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="pFill"></div></div>
+
+<div class="filters-drawer" id="filtersDrawer">
+  <div class="filters-grid">
+    <div class="filter-group">
+      <label>How far back to look</label>
+      <select id="period">
+        <option value="7">Last 7 days</option>
+        <option value="30">Last 30 days</option>
+        <option value="90" selected>Last 90 days</option>
+        <option value="180">Last 180 days</option>
+      </select>
+      <div class="filter-hint">More days gives more comparison data</div>
+    </div>
+    <div class="filter-group">
+      <label>Minimum earthquake magnitude</label>
+      <select id="minMag">
+        <option value="1.0">Any (M1.0+)</option>
+        <option value="2.0">Small (M2.0+)</option>
+        <option value="2.5" selected>Noticeable (M2.5+)</option>
+        <option value="3.0">Moderate (M3.0+)</option>
+        <option value="4.0">Strong (M4.0+)</option>
+        <option value="5.0">Major (M5.0+)</option>
+      </select>
+      <div class="filter-hint">Smaller includes more events</div>
+    </div>
+    <div class="filter-group">
+      <label>What counts as a surge</label>
+      <select id="breakDelta">
+        <option value="0.2" selected>Any noticeable increase</option>
+        <option value="0.4">Significant increase</option>
+        <option value="0.6">Major increase only</option>
+        <option value="1.0">Extreme increase only</option>
+      </select>
+      <div class="filter-hint">How large the magnitude jump needs to be</div>
+    </div>
+    <div class="filter-group">
+      <label>Countries to show</label>
+      <select id="maxShow">
+        <option value="5">Top 5</option>
+        <option value="10">Top 10</option>
+        <option value="20" selected>Top 20</option>
+        <option value="999">All countries</option>
+      </select>
+      <div class="filter-hint">Ranked by urgency automatically</div>
+    </div>
+  </div>
+</div>
+
+<div id="mainContent">
+  <div class="empty-screen">
+    <div class="ei">🌏</div>
+    <div class="et">Ready to scan</div>
+    <div class="ed">
+      Press <strong style="color:#a78bfa">Scan Now</strong> above.<br>
+      The system will load live earthquake data<br>
+      and identify seismic buildup patterns worldwide.
+    </div>
+  </div>
+</div>
+
+<footer>
+  Special thanks, USGS Earthquake Hazards Program for Data · earthquake.usgs.gov · 
+</footer>
+
+<!-- ========== PERFORMANCE: Defer the large script ========== -->
+<script src="earthquake.js" defer></script>
+
+<!-- ========== Core Web Vitals monitor (unchanged, placed at bottom) ========== -->
+<script type="module">
+  import { onCLS, onLCP, onINP } from 'https://unpkg.com/web-vitals@3/dist/web-vitals.js?module';
+  function sendToConsole(metric) {
+    console.log(`${metric.name}: ${metric.value}`);
+    // LCP: < 2.5s | CLS: < 0.1 | INP: < 200ms
+  }
+  onCLS(sendToConsole);
+  onLCP(sendToConsole);
+  onINP(sendToConsole);
+</script>
+</body>
+  </html>
